@@ -3,6 +3,7 @@ const collegeModel = require("../models/collegeModel");
 const {isValid, isValidValue} = require("../controllers/collegeController")
 
 const createIntern = async function (req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   try {
     let data = req.body;
     const { name, email, mobile, collegeName, isDeleted } = req.body;

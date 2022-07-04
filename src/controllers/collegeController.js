@@ -2,12 +2,14 @@ const collegeModel = require("../models/collegeModel");
 const internModel = require("../models/internModel");
 const axios = require("axios");
 
-const isValid = function (value) {                                  // Validataion for empty request body
+const isValid = function (value) {
+  // Validataion for empty request body
   if (Object.keys(value).length === 0) return false;
   else return true;
 };
 
-const isValidValue = function (value) {                             // Validation for Strings/ Empty strings
+const isValidValue = function (value) {
+  // Validation for Strings/ Empty strings
   if (typeof value !== "string") return false;
   else if (value.trim().length == 0) return false;
   else return true;
@@ -55,12 +57,13 @@ const createCollege = async function (req, res) {
         .status(400)
         .send({ status: false, message: "isDeleted is in wrong format" });
 
-    let found = false;                                                              // Using axios to check for correct Logolink with content type image
+    let found = false; // Using axios to check for correct Logolink with content type image
     await axios
       .get(logoLink)
       .then((response) => {
         if (response.status == 200 || response.status == 201) {
-          if (response.headers["content-type"].startsWith("image/")) found = true;
+          if (response.headers["content-type"].startsWith("image/"))
+            found = true;
         }
       })
       .catch((error) => {});
@@ -84,6 +87,7 @@ const createCollege = async function (req, res) {
 };
 
 const getCollegeDetails = async function (req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   try {
     const collegeName = req.query.collegeName;
 
@@ -101,13 +105,14 @@ const getCollegeDetails = async function (req, res) {
         .status(400)
         .send({ status: false, message: "No college found" });
 
-    const collegeDetails = {                                               // Copying name, fullName & logoLink from college to a new object collegeDetails
+    const collegeDetails = {
+      // Copying name, fullName & logoLink from college to a new object collegeDetails
       name: college.name,
       fullName: college.fullName,
       logoLink: college.logoLink,
     };
 
-    const getCollegeId = college._id;                                      // Extracting _id from college & using it to get interns
+    const getCollegeId = college._id; // Extracting _id from college & using it to get interns
     const internData = await internModel
       .find({ collegeId: getCollegeId, isDeleted: false })
       .select({ name: 1, mobile: 1, email: 1 });
@@ -128,5 +133,5 @@ module.exports = {
   createCollege,
   getCollegeDetails,
   isValid,
-  isValidValue
+  isValidValue,
 };
