@@ -1,10 +1,10 @@
 const internModel = require("../models/internModel");
 const collegeModel = require("../models/collegeModel");
-const {isValid, isValidValue} = require("../controllers/collegeController")
+const { isValid, isValidValue } = require("../controllers/collegeController");
 
 const createIntern = async function (req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
   try {
+    res.setHeader("Access-Control-Allow-Origin", "*");
     let data = req.body;
     const { name, email, mobile, collegeName, isDeleted } = req.body;
 
@@ -16,7 +16,7 @@ const createIntern = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "Name is required" });
-    if (!isValidValue(name) || (/\d/.test(name)) )
+    if (!isValidValue(name) || /\d/.test(name))
       return res
         .status(400)
         .send({ status: false, message: "Name is in wrong format" });
