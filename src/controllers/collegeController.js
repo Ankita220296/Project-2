@@ -15,6 +15,7 @@ const isValidValue = function (value) {
   else return true;
 };
 
+// ....................................Create Colleges...................................//
 const createCollege = async function (req, res) {
   try {
     let data = req.body;
@@ -25,6 +26,7 @@ const createCollege = async function (req, res) {
 
     const { name, fullName, logoLink, isDeleted } = req.body;
 
+    // validation for college's Abbrevation name
     if (!name)
       return res
         .status(400)
@@ -34,6 +36,7 @@ const createCollege = async function (req, res) {
         .status(400)
         .send({ status: false, message: "Name is in wrong format" });
 
+    // validation for college's full Name
     if (!fullName)
       return res
         .status(400)
@@ -43,6 +46,7 @@ const createCollege = async function (req, res) {
         .status(400)
         .send({ status: false, message: "Full Name is in wrong format" });
 
+    // validation for Logo Link
     if (!logoLink)
       return res
         .status(400)
@@ -51,11 +55,6 @@ const createCollege = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "Logo link is in wrong format" });
-
-    if (isDeleted && typeof isDeleted !== "boolean")
-      return res
-        .status(400)
-        .send({ status: false, message: "isDeleted is in wrong format" });
 
     let found = false; // Using axios to check for correct Logolink with content type image
     await axios
@@ -73,6 +72,13 @@ const createCollege = async function (req, res) {
         .status(400)
         .send({ status: false, message: "Incorrect logo link" });
 
+    // validation for isDeleted Key
+    if (isDeleted && typeof isDeleted !== "boolean")
+      return res
+        .status(400)
+        .send({ status: false, message: "isDeleted is in wrong format" });
+
+    // Make a DB call on college Model
     let collegeName = await collegeModel.findOne({ name: req.body.name });
     if (collegeName)
       return res
@@ -85,6 +91,8 @@ const createCollege = async function (req, res) {
     return res.status(500).send({ status: false, message: err.message });
   }
 };
+
+// ....................................Get Colleges with Interns details...................................//
 
 const getCollegeDetails = async function (req, res) {
   try {
@@ -112,7 +120,8 @@ const getCollegeDetails = async function (req, res) {
       logoLink: college.logoLink,
     };
 
-    const getCollegeId = college._id; // Extracting _id from college & using it to get interns
+    // Extracting _id from college & using it to get interns
+    const getCollegeId = college._id;
     const internData = await internModel
       .find({ collegeId: getCollegeId, isDeleted: false })
       .select({ name: 1, mobile: 1, email: 1 });

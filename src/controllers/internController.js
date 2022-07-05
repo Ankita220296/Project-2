@@ -2,6 +2,7 @@ const internModel = require("../models/internModel");
 const collegeModel = require("../models/collegeModel");
 const { isValid, isValidValue } = require("../controllers/collegeController");
 
+// ....................................Create Interns...................................//
 const createIntern = async function (req, res) {
   try {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -12,6 +13,8 @@ const createIntern = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "No information pass" });
+
+    // validation for Student's name
     if (!name)
       return res
         .status(400)
@@ -21,6 +24,7 @@ const createIntern = async function (req, res) {
         .status(400)
         .send({ status: false, message: "Name is in wrong format" });
 
+    // validation for Student's email
     if (!email)
       return res
         .status(400)
@@ -34,6 +38,7 @@ const createIntern = async function (req, res) {
         .status(400)
         .send({ status: false, message: "Email is invalid" });
 
+    // validation for Student's mobile number
     if (!mobile)
       return res
         .status(400)
@@ -48,6 +53,7 @@ const createIntern = async function (req, res) {
         .status(400)
         .send({ status: false, message: "mobile is invalid" });
 
+    // Make a DB call on intern model to find email or mobile are exist or not
     let internEmail = await internModel.findOne({
       $or: [{ email: email }, { mobile: mobile }],
     });
@@ -58,6 +64,7 @@ const createIntern = async function (req, res) {
         message: "Email or Mobile number already in use.",
       });
 
+    // validation for College Name
     if (!collegeName)
       return res
         .status(400)
@@ -67,6 +74,7 @@ const createIntern = async function (req, res) {
         .status(400)
         .send({ status: false, message: "collegeName is in wrong format" });
 
+    // validation for isDeleted Key
     if (isDeleted && typeof isDeleted !== "boolean")
       return res
         .status(400)
