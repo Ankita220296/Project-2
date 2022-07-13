@@ -8,6 +8,7 @@ const isValid = function (value) {
   else return true;
 };
 
+
 const isValidValue = function (value) {
   // Validation for Strings/ Empty strings
   if (typeof value !== "string") return false;
